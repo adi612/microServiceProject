@@ -1,0 +1,49 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'Maven3'   // configure Maven in Jenkins (Global Tool Configuration)
+        jdk 'jdk17'      // configure JDK 17 in Jenkins
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'master', url: 'https://github.com/adi612/microServiceProject.git'
+            }
+        }
+
+        stage('Build Auth-Service') {
+            steps {
+                dir('auth-service') {
+                    sh 'mvn clean install -DskipTests'
+                }
+            }
+        }
+
+        stage('Test Auth-Service') {
+            steps {
+                dir('auth-service') {
+                    sh 'mvn test'
+                }
+            }
+        }
+
+        stage('Package Auth-Service') {
+            steps {
+                dir('auth-service') {
+                    sh 'mvn package'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Auth-Service build completed successfully.'
+        }
+        failure {
+            echo '❌ Auth-Service build failed. Check logs.'
+        }
+    }
+}
