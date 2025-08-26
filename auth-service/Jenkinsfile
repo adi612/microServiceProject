@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'master', url: 'https://github.com/adi612/microServiceProject.git'
+                git branch: 'master', url: 'https://github.com/adi612/microServiceProject/tree/master/auth-service.git'
             }
         }
 
