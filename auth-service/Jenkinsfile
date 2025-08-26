@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     tools {
-        maven 'maven3'     // Use the Maven installation name from Global Tool Configuration
-        jdk 'java17'       // Use the JDK installation name from Global Tool Configuration
+        maven 'maven3'     // Name from Global Tool Config
+        jdk 'java17'       // Name from Global Tool Config
     }
 
     stages {
@@ -15,29 +15,35 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'mvn clean install -DskipTests'
+                dir('auth-service') {     // 👈 Move into auth-service folder
+                    sh 'mvn clean install -DskipTests'
+                }
             }
         }
 
         stage('Test') {
             steps {
-                sh 'mvn test'
+                dir('auth-service') {
+                    sh 'mvn test'
+                }
             }
         }
 
         stage('Package') {
             steps {
-                sh 'mvn package -DskipTests'
+                dir('auth-service') {
+                    sh 'mvn package -DskipTests'
+                }
             }
         }
     }
 
     post {
         success {
-            echo 'Build succeeded!'
+            echo '✅ Auth-service build succeeded!'
         }
         failure {
-            echo 'Build failed!'
+            echo '❌ Auth-service build failed!'
         }
     }
 }
